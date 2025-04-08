@@ -41,8 +41,9 @@ void entrada(int ini, int fim, int *opcao){ // verifica se a entrada esta dentro
 void menu(){
     cout << "1 - Adicionar pessoa" << endl;
     cout << "2 - Busca pelo nome" << endl;
-    cout << "3 - Exluir pessoa" << endl;
-    cout << "4 - Sair" << endl << endl;
+    cout << "3 - Listar por cidad" << endl;
+    cout << "4 - Exluir pessoa" << endl;
+    cout << "5 - Sair" << endl << endl;
 }
 
 void valida_DN(Pessoa *p){  // verifica se eh uma data de nascimento valida
@@ -347,6 +348,53 @@ void buscar(string nome_arquivo){
     cin.get();  
 
     arquivo.close();
+}
+
+void listar_cidades(string nome_arquivo){
+
+
+
+    ///// refazer posteriormente
+    map<string, vector<pessoa>> agrupa_cidades;
+    Pessoa p;
+
+    ifstream arq(nome_arquivo);
+
+    int pos;
+    char nome[50];
+    char telefone[20];
+    int dn_dia, dn_mes, dn_ano;
+    char cidade[30];
+    char cep[12];
+    char email[50];
+    
+    if (arq.isopen()){
+        while(getline(arq, linha)){
+            remove_final(linha);
+            p.pos = stoi(linha);
+
+            getline(arq, linha); remove_final(linha); strncpy(p.nome, linha.c_str(), sizeof(p.nome));
+            getline(arq, linha); remove_final(linha); strncpy(p.telefone, linha.c_str(), sizeof(p.telefone));
+            getline(arq, linha); sscanf(linha.c_str(), "%d/%d/%d", &p.dn_dia, &p.dn_mes, &p.dn_ano);
+            getline(arq, linha); remove_final(linha); strncpy(p.cidade, linha.c_str(), sizeof(p.cidade));
+            getline(arq, linha); remove_final(linha); strncpy(p.cep, linha.c_str(), sizeof(p.cep));
+            getline(arq, linha); remove_final(linha); strncpy(p.email, linha.c_str(), sizeof(p.email));
+            
+            agrupa_cidades[string(p.cidade)].push_back(p);
+        }
+    }
+
+    for (const auto& par : agrupa_cidades){
+        cout << "=== " << par.firt << " ===" << endl;
+        for (const auto& k: par.second){
+            cout << p.nome << endl
+                 << p.
+        }
+    }
+
+
+
+
 }
 
 void excluir(string nome_arquivo){

@@ -19,15 +19,28 @@ int main(){
     while (continuar){
         limpa_tela();
         menu();
-        entrada(1, 3, &opcao);
+        entrada(1, 4, &opcao);
         switch (opcao){
             case 1:
+            limpa_tela();
             adicionar(arq);
             break;
             case 2:
+            limpa_tela();
+            atualiza_arquivo(arq);
             buscar(arq);
             break;
             case 3:
+            limpa_tela();
+            atualiza_arquivo(arq);
+            listar_cidades(arq);
+            break;
+            case 4: 
+            limpa_tela();
+            atualiza_arquivo(arq);
+            excluir(arq);
+            break;
+            case 5:
             continuar = false;
             break;
         }
