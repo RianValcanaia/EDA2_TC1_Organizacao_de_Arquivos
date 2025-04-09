@@ -31,11 +31,11 @@ void limpa_buffer() {  // limpa buffer de entrada
 
 void entrada(int ini, int fim, int *opcao){ // verifica se a entrada esta dentro do intervalo
     int a;
-    cout << "Digite uma opcao: ";
+    cout << "Digite uma opção: ";
     cin >> a;
     while (a < ini || a > fim){
         cout << "Digite nomamente, intervalo aceito [" << ini << ',' << fim << ']' << endl;
-        cout << "Digite uma opcao: ";
+        cout << "Digite uma opção: ";
         cin >> a;
     }
     *opcao = a;
@@ -61,7 +61,7 @@ void le_DN(Spessoa *p){  // verifica se eh uma data de nascimento valida
             p->dn_dia <= meses[p->dn_mes-1] && 
             p->dn_ano <= 2025) continuar = false;
 
-        if (continuar) cout << "\tData nao existente, digite novamente" << endl;
+        if (continuar) cout << "\tData não existente, digite novamente" << endl;
     }
 }
 
@@ -122,25 +122,25 @@ void adicionar(vector<Spessoa> &agenda){
     cin.get();
 }
 
-void buscar(vector<Spessoa> &agenda){
+void listar_por_cidade(vector<Spessoa> &agenda){
     limpa_tela();
-    cout << "BUSCAR PESSOA NA AGENDA" << endl << endl;
+    cout << "LISTAR PESSOA(S) POR CIDADE" << endl << endl;
 
-    string nome;
-    cout << "Digite o nome a ser procurado: ";
+    string cidade;
+    cout << "Digite a cidade que deseja buscar: ";
     limpa_buffer();
-    getline(cin, nome);  // realiza uma entrada ignirando espacos
+    getline(cin, cidade);  // realiza uma entrada ignirando espacos
 
     vector<Spessoa> encontradas;
 
     for (int i = 0; i < agenda.size(); i++){
-        if (nome == string(agenda[i].nome)){
+        if (cidade == string(agenda[i].cidade)){
             encontradas.push_back(agenda[i]);
         }
     }
 
     if (encontradas.size() == 0) {
-        cout << "Pessoa não encontrada." << endl;
+        cout << "Nenhuma pessoa encontrada desta cidade." << endl;
     }else{
         for (const auto &p: encontradas){
             cout << "Nome: " << p.nome << endl;
@@ -209,7 +209,7 @@ void carrega_arquivo(vector<Spessoa> &agenda, string nome_arquivo){
     ifstream arq(nome_arquivo);
 
     if (!arq) {
-        cout << "\nArquivo de agenda não encontrado. Criando novo arquivo. Aperte enter para continuar." << endl;
+        cout << "\nArquivo de agenda não encontrado. Criando novo arquivo. Aperte enter para continuar.";
         ofstream arq(nome_arquivo);
         cin.ignore();
         return;
@@ -249,13 +249,42 @@ void salva_arquivo(vector<Spessoa> &agenda, string nome_arquivo){
                << pessoa.email << endl;
         }
     }else {
-        cout << "Erro ao criar arquivo." << endl;
+        cout << "Erro ao criar arquivo" << endl;
     }
-
     limpa_tela();
-    cout << "Arquivo salvo com sucesso." << endl;
+    cout << "Arquivo salvo com sucesso!" << endl;
 
     arq.close();
+}
+
+void cria_arq_invertido(vector<Spessoa> &agenda, string nome_arquivo){
+    for (int i = 0; i < 4; i++) nome_arquivo.pop_back();
+    string nome_arquivo_invertido = nome_arquivo + "_invertido.txt";
+   // nome_arquivo += ".txt";
+
+    remove(nome_arquivo_invertido.c_str());
+    ofstream arq_invertido(nome_arquivo_invertido);
+
+    map<string, vector<Spessoa>> cidades;
+
+    for (int i = 0; i < agenda.size(); i++){
+        cidades[string(agenda[i].cidade)].push_back(agenda[i]);
+    }
+
+    for (const auto &par: cidades){
+        vector<Spessoa> v = par.second;
+        arq_invertido << par.first << endl;
+        for (const auto &i: v){
+            arq_invertido << "\t" << i.nome << endl
+                          << "\t" << i.telefone << endl 
+                          << "\t" << setw(2) << i.dn_dia << "/" << setw(2) << i.dn_mes << "/" << setw(4) << i.dn_ano << endl
+                          << "\t" << i.cidade << endl
+                          << "\t" << i.cep << endl
+                          << "\t" << i.email << endl;
+        }
+    }
+
+    arq_invertido.close();
 }
 
 int main(){
@@ -274,7 +303,7 @@ int main(){
     while(continuar){
         limpa_tela();
         cout << "1 - Adicionar pessoa na agenda" << endl;
-        cout << "2 - Buscar pelo nome" << endl;
+        cout << "2 - Listar por cidade" << endl;
         cout << "3 - Excluir pessoa" << endl;
         cout << "4 - Sair" << endl;
         
@@ -285,7 +314,7 @@ int main(){
                 ordenar(agenda);
             break;
             case 2:
-                buscar(agenda);
+                listar_por_cidade(agenda);
             break;
             case 3:
                 excluir(agenda);
@@ -294,8 +323,8 @@ int main(){
                 continuar = false;
             break;
         }
+        
+        salva_arquivo(agenda,arq);
+        cria_arq_invertido(agenda, arq);
     }
-
-    salva_arquivo(agenda,arq);
-
 }

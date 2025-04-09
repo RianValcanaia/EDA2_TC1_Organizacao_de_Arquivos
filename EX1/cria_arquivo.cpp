@@ -30,11 +30,11 @@ void limpa_buffer() {  // limpa buffer de entrada
 
 void entrada(int ini, int fim, int *opcao){ // verifica se a entrada esta dentro do intervalo
     int a;
-    cout << "Digite uma opcao: ";
+    cout << "Digite uma opção: ";
     cin >> a;
     while (a < ini || a > fim){
         cout << "Digite nomamente, intervalo aceito [" << ini << ',' << fim << ']' << endl;
-        cout << "Digite uma opcao: ";
+        cout << "Digite uma opção: ";
         cin >> a;
     }
     *opcao = a;
@@ -74,7 +74,7 @@ void adicionar(vector<Spessoa> &agenda){
     Spessoa pessoa;
 
     // Entrada relacionado a Pessoa
-    cout << "Informacoes sobre pessoa:" << endl;
+    cout << "Informaões sobre pessoa:" << endl;
     cout << "\tDigite o nome: ";
     limpa_buffer();
     cin.getline(pessoa.nome, 50);  // uso de cin.getline() pois queremos pegar espacos
@@ -105,7 +105,7 @@ void carrega_arquivo(vector<Spessoa> &agenda, string nome_arquivo){
     ifstream arq(nome_arquivo);
 
     if (!arq) {
-        cout << "\nArquivo de Calendario não encontrado. Criando novo arquivo. Aperte enter para continuar.";
+        cout << "\nArquivo de agenda não encontrado. Criando novo arquivo. Aperte enter para continuar.";
         ofstream arq(nome_arquivo);
         cin.ignore();
         return;
@@ -147,7 +147,8 @@ void salva_arquivo(vector<Spessoa> &agenda, string nome_arquivo){
     }else {
         cout << "Erro ao criar arquivo" << endl;
     }
-
+    limpa_tela();
+    cout << "Arquivo salvo com sucesso." << endl;
     arq.close();
 }
 
@@ -173,7 +174,7 @@ int main(){
         switch (opcao){
             case 1:
                 limpa_tela();
-                cout << "ADICIONAR EVENTO " << endl << endl;
+                cout << "ADICIONAR PESSOA NA AGENDA " << endl << endl;
                 adicionar(agenda);
             break;
             case 2:
@@ -183,5 +184,4 @@ int main(){
     }
 
     salva_arquivo(agenda,arq);
-
 }
